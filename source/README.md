@@ -1,33 +1,34 @@
 # Profile cover
 
-An eight-second loop of an abstract signal network. It is artwork, not a visualization of experimental results. The name and affiliation stay still. GitHub displays a GIF; the README also provides a PNG and a reduced-motion picture source.
+The cover is an animated SVG: a circular shaded sphere, rotating meridians, and a point of light following an orbit. It is decorative artwork, not experimental data. The name and affiliation remain still.
 
-## Edit and render
+SVG keeps edges sharp at any display size and avoids GIF compression. The README uses `profile-static.svg` when the browser requests reduced motion, and includes a direct link to that still cover.
 
-Requires Node.js 22+, Chromium and FFmpeg. From the repository root:
+## Edit
+
+Requires Node.js; no packages or build service are needed.
 
 ```sh
-npm install --no-save --package-lock=false hyperframes@0.8.185 gsap@3.14.2
-node -e "const fs=require('node:fs');fs.mkdirSync('source/assets',{recursive:true});fs.copyFileSync('node_modules/gsap/dist/gsap.min.js','source/assets/gsap.min.js')"
-node source/check.mjs
-cd source
-npx hyperframes check --json
-npx hyperframes preview
-npx hyperframes render --quality delivery --fps 30 --output ../assets/profile.mp4
-cd ..
-ffmpeg -y -i assets/profile.mp4 -vf "fps=12,scale=960:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=48:stats_mode=full[p];[b][p]paletteuse=dither=none:diff_mode=rectangle" -loop 0 assets/profile.gif
-ffmpeg -y -ss 2 -i assets/profile.mp4 -frames:v 1 assets/profile.png
+node source/make-cover.mjs
 ```
 
-The CLI resolves Inter and IBM Plex Mono through its font cache. Set `DO_NOT_TRACK=1` to disable HyperFrames telemetry. Generated dependency files and local render reports are ignored by Git.
+This generates both SVGs in `assets/`. Edit the typography, colours and geometry in the generator. Its assertions check the loop boundary and reject invalid numeric output or embedded scripts. The sphere's silhouette is a circle with a constant radius; the meridians rotate without changing that radius.
 
-The composition is 1920 × 720. Edit the copy and drawing in [cover.html](compositions/cover.html). The check exercises all drawing frames and verifies that the geometry closes at the loop boundary.
+To preview locally, serve the repository with any static HTTP server and open `source/preview.html`. The animation uses SVG SMIL, runs for 16 seconds per loop, and has no external assets or JavaScript in the delivered image.
 
 ## Content sources
 
-- Biography, research topics, tools and institutional email: [the previous profile README](https://github.com/MarcoCasalbore/MarcoCasalbore/blob/95f65ffbd980979e98bcf078c34423efd48ab5d4/README.md).
-- ORCID: the public [GitHub profile](https://github.com/MarcoCasalbore).
-- Project description: [Graph Water Recon](https://github.com/MarcoCasalbore/Graph-water-recon).
-- Visual reference: [Matteo Di Salvo's profile](https://github.com/matteodisalvo). This cover uses original artwork and layout; no assets or biography were copied.
+Biography, institutional email and the original tool badges come from [the previous profile README](https://github.com/MarcoCasalbore/MarcoCasalbore/blob/95f65ffbd980979e98bcf078c34423efd48ab5d4/README.md).
 
-The former LinkedIn URL contained a space and did not identify a valid profile. It is omitted until a confirmed URL is available.
+Research topics were checked against the author's `paperi` archive, its bibliography and these manuscripts:
+
+- *Hybrid Quantum-Classical Framework for Anomaly Detection in Time Series with QUBO Formulation and QAOA.*
+- *From Telemetry to Network Diagnostics: Supporting Operators in Massive IoT over LoRaWAN.*
+- *Predictive Gateway Selection for Downlink Traffic in LoRaWAN Networks.*
+- *TwinAI: A Digital Twin and Graph Reinforcement Learning Framework for Real-Time Management of Water Distribution Networks.*
+
+The profile describes research topics without making claims about publication status or results. The archive, manuscripts and CV are not included in this repository. The archive also supplies the [Google Scholar](https://scholar.google.com/citations?user=tQ9WvasAAAAJ) and [Sapienza](https://iris.uniroma1.it/cris/rp/rp351408) profile links.
+
+Visual reference: [Matteo Di Salvo's profile](https://github.com/matteodisalvo). The artwork and implementation here are original.
+
+The previous LinkedIn URL was malformed and remains omitted pending a confirmed address.
