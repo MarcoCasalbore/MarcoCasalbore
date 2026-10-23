@@ -1,0 +1,4 @@
+.work/
+node_modules/
+source/.hyperframes/
+source/assets/gsap.min.js

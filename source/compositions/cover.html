@@ -1,0 +1,75 @@
+<template>
+<style>
+#root{position:relative;width:1920px;height:720px;overflow:hidden;background:#10191d;color:#f0f1e9;font-family:Inter,sans-serif}
+#signal{position:absolute;inset:0}
+#copy{position:absolute;left:170px;top:125px;width:950px}
+#eyebrow{font-family:'IBM Plex Mono',monospace;font-size:22px;letter-spacing:4px;color:#8be1cd;margin:0 0 35px}
+#name{font-size:112px;line-height:1.04;font-weight:500;letter-spacing:-6px;margin:0}
+#affiliation{font-size:27px;line-height:1.6;color:#c0cccb;margin:38px 0 0}
+#topics{position:absolute;left:170px;bottom:87px;font-family:'IBM Plex Mono',monospace;font-size:21px;letter-spacing:1px;color:#a5b9b8}
+</style>
+<div data-hf-id="hf-l1w2" id="root" data-composition-id="cover" data-start="0" data-duration="8" data-width="1920" data-height="720">
+  <canvas data-hf-id="hf-snjx" id="signal" width="1920" height="720" aria-hidden="true" data-layout-allow-overlap></canvas>
+  <div data-hf-id="hf-5l42" id="copy">
+    <p data-hf-id="hf-cnpx" id="eyebrow">RESEARCH / ICT</p>
+    <h1 data-hf-id="hf-s6ja" id="name">Marco<br data-hf-id="hf-x5px">Casalbore</h1>
+    <p data-hf-id="hf-d8ug" id="affiliation">PhD candidate<br data-hf-id="hf-rsrt">Sapienza University of Rome</p>
+  </div>
+  <div data-hf-id="hf-mbvq" id="topics">Machine learning &nbsp; / &nbsp; Quantum computing</div>
+</div>
+<script>
+// Abstract artwork: the geometry does not encode research data.
+const canvas = document.getElementById('signal');
+const ctx = canvas.getContext('2d');
+const phase = {value: 0};
+const TAU = Math.PI * 2;
+const rows = 17;
+const columns = 64;
+function point(row, column, time) {
+  const v = (row / (rows - 1) - .5) * Math.PI;
+  const u = column / columns * TAU + time;
+  const radius = 244 + 17 * Math.sin(3 * u + 2 * v - time);
+  const x = radius * Math.cos(v) * Math.cos(u);
+  const y = radius * Math.sin(v);
+  const z = radius * Math.cos(v) * Math.sin(u);
+  const tilt = -.27;
+  return {x: 1450 + x * Math.cos(tilt) - y * Math.sin(tilt),
+          y: 355 + x * Math.sin(tilt) + y * Math.cos(tilt), z};
+}
+function draw() {
+  ctx.clearRect(0, 0, 1920, 720);
+  const time = phase.value;
+  ctx.fillStyle = '#26373c';
+  for (let x = 1080; x <= 1800; x += 60) {
+    for (let y = 115; y <= 595; y += 60) ctx.fillRect(x, y, 2, 2);
+  }
+  const segments = [];
+  for (let row = 1; row < rows - 1; row++) {
+    for (let column = 0; column < columns; column++) {
+      const p = point(row, column, time);
+      segments.push({p, q: point(row, column + 1, time), ring: true});
+      if (column % 4 === 0 && row < rows - 2)
+        segments.push({p, q: point(row + 1, column, time), ring: false});
+    }
+  }
+  segments.sort((a, b) => a.p.z - b.p.z);
+  for (const {p, q, ring} of segments) {
+    const depth = (p.z + 270) / 540;
+    ctx.strokeStyle = `rgba(139,225,205,${.07 + depth * (ring ? .58 : .28)})`;
+    ctx.lineWidth = ring ? 1.3 : .85;
+    ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();
+  }
+  for (let i = 0; i < 12; i++) {
+    const p = point(3 + i % 11, i * 7, time);
+    if (p.z < 0) continue;
+    ctx.fillStyle = i % 3 === 0 ? '#e7bd86' : '#d5fff2';
+    ctx.beginPath();ctx.arc(p.x,p.y,2.6 + p.z / 200,0,TAU);ctx.fill();
+  }
+}
+draw();
+const tl = gsap.timeline({paused:true});
+tl.to(phase,{value:TAU,duration:8,ease:'none',onUpdate:draw},0);
+window.__timelines=window.__timelines||{};
+window.__timelines.cover=tl;
+</script>
+</template>
