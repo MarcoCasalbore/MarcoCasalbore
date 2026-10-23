@@ -1,4 +1,6 @@
 .work/
 node_modules/
 source/.hyperframes/
+source/.thumbnails/
+source/debug.log
 source/assets/gsap.min.js
