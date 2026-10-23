@@ -41,8 +41,8 @@
   <g transform="rotate(-28)">
     <path d="M-328,0a328,92 0 0,0 656,0" fill="none" stroke="url(#orbit)" stroke-width="1.6"/>
     <g>
-      
-      
+
+
       <circle r="23" fill="url(#spark)"/>
       <circle r="3.2" fill="#e9fbff"/>
     </g>

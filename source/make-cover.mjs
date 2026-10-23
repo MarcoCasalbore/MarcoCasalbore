@@ -62,5 +62,5 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="720" v
 assert(!svg.includes('NaN'));
 assert(!svg.includes('<script'));
 writeFileSync(new URL('../assets/profile.svg',import.meta.url),svg);
-writeFileSync(new URL('../assets/profile-static.svg',import.meta.url),svg.replace(/<animate(?:Motion)?\b[^>]*\/>/g,''));
+writeFileSync(new URL('../assets/profile-static.svg',import.meta.url),svg.replace(/<animate(?:Motion)?\b[^>]*\/>/g,'').replace(/^ +$/gm,''));
 console.log(`Wrote animated and static SVG covers (${Buffer.byteLength(svg)} bytes animated).`);
